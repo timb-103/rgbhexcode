@@ -293,8 +293,8 @@
           <div class="color-slider-background">
             <!-- hue -->
             <div v-if="mode === 'hue'" class="color-map-item">
-              <img src="color-picker/images/blank.gif" />
-              <img src="color-picker/images/bar-hue.png" />
+              <img src="color-picker/images/blank.gif" loading="lazy" />
+              <img src="color-picker/images/bar-hue.png" loading="lazy" />
             </div>
 
             <!-- saturation -->
@@ -311,10 +311,14 @@
 
             <!-- red -->
             <div v-if="mode === 'red'" class="color-map-item">
-              <img src="color-picker/images/bar-red-bl.png" :style="{ opacity: slideBarOpacity.barL1 / 100 }" />
-              <img src="color-picker/images/bar-red-br.png" :style="{ opacity: slideBarOpacity.barL2 / 100 }" />
-              <img src="color-picker/images/bar-red-tr.png" :style="{ opacity: slideBarOpacity.barL3 / 100 }" />
-              <img src="color-picker/images/bar-red-tl.png" :style="{ opacity: slideBarOpacity.barL4 / 100 }" />
+              <img :src="mode === 'red' ? 'color-picker/images/bar-red-bl.png' : ''"
+                :style="{ opacity: slideBarOpacity.barL1 / 100 }" />
+              <img :src="mode === 'red' ? 'color-picker/images/bar-red-br.png' : ''"
+                :style="{ opacity: slideBarOpacity.barL2 / 100 }" />
+              <img :src="mode === 'red' ? 'color-picker/images/bar-red-tr.png' : ''"
+                :style="{ opacity: slideBarOpacity.barL3 / 100 }" />
+              <img :src="mode === 'red' ? 'color-picker/images/bar-red-tl.png' : ''" :style=" { opacity:
+                slideBarOpacity.barL4 / 100 }" />
             </div>
 
             <!-- green -->
