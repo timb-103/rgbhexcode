@@ -252,7 +252,8 @@
         <div class="color-map" @click="moveMapPoint" @mousedown.prevent="startDrag" draggable="false">
           <!-- drag handle -->
           <img class="color-map-drag-handle" :src="getImageSrc(true, 'color-picker/images/mappoint.gif')"
-            :style="{ left: `${mapPoint.positionX}px`, top: `${mapPoint.positionY}px` }" draggable="false" />
+            :style="{ left: `${mapPoint.positionX}px`, top: `${mapPoint.positionY}px` }" draggable="false"
+            alt="drag handle" />
 
           <!-- hue -->
           <div v-if="mode === 'hue'" class="color-map-item">
@@ -263,8 +264,8 @@
 
           <!-- saturation -->
           <div v-if="mode === 'saturation'" class="color-map-item">
-            <img src="color-picker/images/map-saturation.png" />
-            <img src="color-picker/images/map-saturation-overlay.png"
+            <img src="color-picker/images/map-saturation.png" alt="saturation" />
+            <img src="color-picker/images/map-saturation-overlay.png" alt="saturation overlay"
               :style="{ opacity: 1 - (colors.saturation / 100) }" />
           </div>
 
@@ -309,8 +310,9 @@
 
             <!-- saturation -->
             <div v-if="mode === 'saturation'" class="color-map-item">
-              <img src="color-picker/images/blank.gif" :style="{ backgroundColor: slideBarBackground }" />
-              <img src="color-picker/images/bar-saturation.png" />
+              <img src="color-picker/images/blank.gif" :style="{ backgroundColor: slideBarBackground }"
+                alt="slider background" />
+              <img src="color-picker/images/bar-saturation.png" alt="saturation slider background" />
             </div>
 
             <!-- brightness -->
@@ -359,7 +361,7 @@
 
           <!-- color bar slider -->
           <input class="color-slider-range" type="range" min="0" :max="maxSliderValues[mode]" v-model="colors[mode]"
-            @input="onSliderChange" />
+            @input="onSliderChange" aria-label="slider" />
         </div>
 
         <div>
@@ -371,14 +373,15 @@
             <div class="color-inputs">
               <!-- hue -->
               <div>
-                <input type="radio" name="mode" value="hue" v-model="mode" @change="onHsvChange">
+                <input type="radio" name="mode" value="hue" v-model="mode" @change="onHsvChange" aria-labelledby="hue">
                 <label for="hue">H:</label>
                 <input class="color-input" type="text" id="hue" v-model="colors.hue" @input="onHsvChange">°
               </div>
 
               <!-- saturation -->
               <div>
-                <input type="radio" name="mode" value="saturation" v-model="mode" @change="onHsvChange">
+                <input type="radio" name="mode" value="saturation" v-model="mode" @change="onHsvChange"
+                  aria-labelledby="saturation">
                 <label for="saturation">S:</label>
                 <input class="color-input" type="text" id="saturation" v-model="colors.saturation"
                   @input="onHsvChange">%
@@ -386,7 +389,8 @@
 
               <!-- brightness -->
               <div>
-                <input type="radio" name="mode" value="brightness" v-model="mode" @change="onHsvChange">
+                <input type="radio" name="mode" value="brightness" v-model="mode" @change="onHsvChange"
+                  aria-labelledby="brightness">
                 <label for="brightness">B:</label>
                 <input class="color-input" type="text" id="brightness" v-model="colors.brightness"
                   @input="onHsvChange">%
@@ -394,21 +398,23 @@
 
               <!-- red -->
               <div>
-                <input type="radio" name="mode" value="red" v-model="mode" @change="onRgbChange">
+                <input type="radio" name="mode" value="red" v-model="mode" @change="onRgbChange" aria-labelledby="red">
                 <label for="red">R:</label>
                 <input class="color-input" type="text" id="red" v-model="colors.red" @input="onRgbChange">
               </div>
 
               <!-- green -->
               <div>
-                <input type="radio" name="mode" value="green" v-model="mode" @change="onRgbChange">
+                <input type="radio" name="mode" value="green" v-model="mode" @change="onRgbChange"
+                  aria-labelledby="green">
                 <label for="green">G:</label>
                 <input class="color-input" type="text" id="green" v-model="colors.green" @input="onRgbChange">
               </div>
 
               <!-- blue -->
               <div>
-                <input type="radio" name="mode" value="blue" v-model="mode" @change="onRgbChange">
+                <input type="radio" name="mode" value="blue" v-model="mode" @change="onRgbChange"
+                  aria-labelledby="blue">
                 <label for="blue">B:</label>
                 <input class="color-input" type="text" id="blue" v-model="colors.blue" @input="onRgbChange">
               </div>
