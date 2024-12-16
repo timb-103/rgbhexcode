@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Use our Photoshop-style RGB/Hex color picker to find the color you are looking for (along with complementary colors, tints, shades, tones, etc.).">
+    content="Photoshop-style RGB/Hex color picker to find the color you are looking for (along with complementary colors, tints, shades, tones, etc.).">
   <meta name="keywords" content="HTML,CSS,Hex,Color,Color, Color Picker, Color Tool, Web Design Tool">
   <title>Hex Code Color Picker | RGBHexCode.com</title>
   <link id="favicon" rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -167,12 +167,14 @@
       max-width: 100%;
       margin: auto;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       padding: 10px;
     }
 
     h1 {
+      font-size: 18px;
       margin: 0;
     }
 
@@ -192,6 +194,7 @@
 
     .nav-title>a {
       color: #fff;
+      font-weight: 700;
     }
 
     .nav-description {
@@ -232,12 +235,12 @@
   <!-- nav -->
   <nav class="nav-container">
     <div class="nav">
-      <h1 class="nav-title">
-        <a href="http://web.archive.org/web/20140407063816/http://rgbhexcode.com/">RGBHexCode</a>
-      </h1>
-      <p class="nav-description">
-        HTML/CSS Color Picker & Converter
+      <p class="nav-title">
+        <a href="https://rgbhexcode.com">RGBHexCode</a>
       </p>
+      <h1 class="nav-description">
+        HTML/CSS Color Picker & Converter
+      </h1>
     </div>
   </nav>
 
@@ -410,15 +413,16 @@
                 <label for="blue">B:</label>
                 <input class="color-input" type="text" id="blue" v-model="colors.blue" @input="onRgbChange">
               </div>
-
-              <!-- hex -->
-              <div>
-                <label for="hex">#:</label>
-                <input class="hex-input" type="text" id="hex" v-model="colors.hex" @input="updateColorsbyHex">
-              </div>
             </div>
           </div>
         </div>
+
+      </div>
+      <!-- hex -->
+      <div style="text-align: center; margin-top: 10px;font-size: 30px;">
+        <label for="hex">#:</label>
+        <input class="hex-input" type="text" id="hex" v-model="colors.hex" @input="updateColorsbyHex"
+          style="width: 120px;font-size: 30px;">
       </div>
     </div>
 
