@@ -263,8 +263,8 @@
 
           <!-- saturation -->
           <div v-if="mode === 'saturation'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'saturation', 'color-picker/images/map-saturation.png')" />
-            <img :src="getImageSrc(mode === 'saturation', 'color-picker/images/map-saturation-overlay.png')"
+            <img src="color-picker/images/map-saturation.png" />
+            <img src="color-picker/images/map-saturation-overlay.png"
               :style="{ opacity: 1 - (colors.saturation / 100) }" />
           </div>
 
@@ -309,9 +309,8 @@
 
             <!-- saturation -->
             <div v-if="mode === 'saturation'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'saturation', 'color-picker/images/blank.gif')"
-                :style="{ backgroundColor: slideBarBackground }" />
-              <img :src="getImageSrc(mode === 'saturation', 'color-picker/images/bar-saturation.png')" />
+              <img src="color-picker/images/blank.gif" :style="{ backgroundColor: slideBarBackground }" />
+              <img src="color-picker/images/bar-saturation.png" />
             </div>
 
             <!-- brightness -->
