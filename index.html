@@ -1,925 +1,1059 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Photoshop-style RGB/Hex color picker to find the color you are looking for (along with complementary colors, tints, shades, tones, etc.)."
+    />
+    <meta name="keywords" content="HTML,CSS,Hex,Color,Color, Color Picker, Color Tool, Web Design Tool" />
+    <title>Hex Code Color Picker | RGBHexCode.com</title>
+    <link id="favicon" rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <script defer data-domain="rgbhexcode.com" src="https://plausible.io/js/script.js"></script>
+    <script type="text/javascript" src="color-picker/color-methods.js"></script>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Photoshop-style RGB/Hex color picker to find the color you are looking for (along with complementary colors, tints, shades, tones, etc.).">
-  <meta name="keywords" content="HTML,CSS,Hex,Color,Color, Color Picker, Color Tool, Web Design Tool">
-  <title>Hex Code Color Picker | RGBHexCode.com</title>
-  <link id="favicon" rel="icon" href="img/favicon.ico" type="image/x-icon">
-  <script defer data-domain="rgbhexcode.com" src="https://plausible.io/js/script.js"></script>
-  <script type="text/javascript" src="color-picker/color-methods.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: helvetica;
-      margin: 0;
-      padding-bottom: 100px;
-    }
-
-    /* Style the range slider */
-    input[type="range"] {
-      background: rgba(0, 0, 0, 0);
-      outline: none;
-    }
-
-    /* Style the slider track (WebKit browsers) */
-    input[type="range"]::-webkit-slider-runnable-track {
-      background: rgba(0, 0, 0, 0);
-    }
-
-    /* Style the slider track (Firefox) */
-    input[type="range"]::-moz-range-track {
-      background: rgba(0, 0, 0, 0);
-    }
-
-    .content {
-      max-width: 1000px;
-      margin-top: 20px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .container {
-      padding: 15px;
-      background-color: #fff;
-      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    }
-
-    .color-picker {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .color-map {
-      width: 256px;
-      aspect-ratio: 1;
-      border: 1px solid rgb(0, 0, 0);
-      position: relative;
-      user-select: none;
-    }
-
-    .color-map-item {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-
-    .color-map-item>img {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 100%;
-      height: 100%;
-    }
-
-    .color-map-drag-handle {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      z-index: 1;
-      cursor: grab;
-      user-select: none;
-    }
-
-    .color-slider {
-      width: 20px;
-      height: 256px;
-      padding: 0px;
-      margin: 0px 10px;
-      border: 1px solid rgb(0, 0, 0);
-      position: relative;
-    }
-
-    .color-slider-range {
-      position: absolute;
-      writing-mode: vertical-lr;
-      direction: rtl;
-      appearance: slider-vertical;
-      width: 16px;
-      vertical-align: bottom;
-      top: 0;
-      height: 100%;
-    }
-
-    .color-slider-background {
-      width: 100%;
-      height: 100%;
-    }
-
-    .color-slider-background>img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .color-preview {
-      background-color: #fff;
-      width: 60px;
-      height: 60px;
-      border: solid 1px #000;
-      margin-bottom: 8px;
-    }
-
-    .color-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .color-input {
-      width: 40px;
-    }
-
-    .hex-input {
-      width: 60px;
-    }
-
-    .nav-container {
-      width: 100%;
-      top: 0px;
-      position: sticky;
-      background: #fff;
-      background-image: url('img/bg.jpg');
-      color: #fff;
-      z-index: 1000;
-
-      -webkit-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-      -moz-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-      box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .nav {
-      width: 1000px;
-      max-width: 100%;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-    }
-
-    h1 {
-      font-size: 18px;
-      margin: 0;
-    }
-
-    h2 {
-      font-size: 16px;
-      margin: 0 0 10px 0;
-    }
-
-    h3 {
-      font-size: 14px;
-      margin: 0 0 10px 0;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .nav-title>a {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .nav-description {
-      color: #fff;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .grid-cols-2 {
-      display: grid;
-      gap: 10px;
-    }
-
-    @media (min-width: 700px) {
-      .grid-cols-2 {
-        grid-template-columns: 1fr 1fr;
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    }
 
-    [v-cloak] {
-      display: none;
-    }
+      body {
+        font-family: helvetica;
+        margin: 0;
+        padding-bottom: 100px;
+      }
 
-    .color-square {
-      padding: 10px;
-      height: 70px;
-      aspect-ratio: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-    }
-  </style>
-</head>
+      /* Style the range slider */
+      input[type="range"] {
+        background: rgba(0, 0, 0, 0);
+        outline: none;
+      }
 
-<body @vue:mounted="mounted" v-cloak>
-  <!-- nav -->
-  <nav class="nav-container">
-    <div class="nav">
-      <p class="nav-title">
-        <a href="https://rgbhexcode.com">RGBHexCode</a>
-      </p>
-      <h1 class="nav-description">
-        HTML/CSS Color Picker & Converter
-      </h1>
-    </div>
-  </nav>
+      /* Style the slider track (WebKit browsers) */
+      input[type="range"]::-webkit-slider-runnable-track {
+        background: rgba(0, 0, 0, 0);
+      }
 
-  <div class="content">
-    <!-- color picker -->
-    <div class="container">
-      <div class="color-picker">
-        <!-- color map -->
-        <div class="color-map" @click="moveMapPoint" @mousedown.prevent="startDrag" draggable="false">
-          <!-- drag handle -->
-          <img class="color-map-drag-handle" :src="getImageSrc(true, 'color-picker/images/mappoint.gif')"
-            :style="{ left: `${mapPoint.positionX}px`, top: `${mapPoint.positionY}px` }" draggable="false"
-            alt="drag handle" />
+      /* Style the slider track (Firefox) */
+      input[type="range"]::-moz-range-track {
+        background: rgba(0, 0, 0, 0);
+      }
 
-          <!-- hue -->
-          <div v-if="mode === 'hue'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'hue', 'color-picker/images/blank.gif')"
-              :style="{ backgroundColor: getRGB(colors) }" />
-            <img :src="getImageSrc(mode === 'hue', 'color-picker/images/map-hue.png')" />
-          </div>
+      .content {
+        max-width: 1000px;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
-          <!-- saturation -->
-          <div v-if="mode === 'saturation'" class="color-map-item">
-            <img src="color-picker/images/map-saturation.png" alt="saturation" />
-            <img src="color-picker/images/map-saturation-overlay.png" alt="saturation overlay"
-              :style="{ opacity: 1 - (colors.saturation / 100) }" />
-          </div>
+      .container {
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+      }
 
-          <!-- brightness -->
-          <div v-if="mode === 'brightness'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'brightness', 'color-picker/images/blank.gif')"
-              style="background-color: rgb(0, 0, 0)" />
-            <img :src="getImageSrc(mode === 'brightness', 'color-picker/images/map-brightness.png')"
-              :style="{ opacity: colors.brightness / 100 }" />
-          </div>
+      .color-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: flex-start;
+        justify-content: center;
+      }
 
-          <!-- red -->
-          <div v-if="mode === 'red'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'red', 'color-picker/images/map-red-min.png')" />
-            <img :src="getImageSrc(mode === 'red', 'color-picker/images/map-red-max.png')"
-              :style="{ opacity: colors.red / 255 }" />
-          </div>
+      .color-map {
+        width: 256px;
+        aspect-ratio: 1;
+        border: 1px solid rgb(0, 0, 0);
+        position: relative;
+        user-select: none;
+      }
 
-          <!-- green -->
-          <div v-if="mode === 'green'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'green', 'color-picker/images/map-green-min.png')" />
-            <img :src="getImageSrc(mode === 'green', 'color-picker/images/map-green-max.png')"
-              :style="{ opacity: colors.green / 255 }" />
-          </div>
+      .color-map-item {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
 
-          <!-- blue -->
-          <div v-if="mode === 'blue'" class="color-map-item">
-            <img :src="getImageSrc(mode === 'blue', 'color-picker/images/map-blue-min.png')" />
-            <img :src="getImageSrc(mode === 'blue', 'color-picker/images/map-blue-max.png')"
-              :style="{ opacity: colors.blue / 255 }" />
-          </div>
-        </div>
+      .color-map-item > img {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+      }
 
-        <!-- color bar-->
-        <div class="color-slider">
-          <div class="color-slider-background">
+      .color-map-drag-handle {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        cursor: grab;
+        user-select: none;
+      }
+
+      .color-slider {
+        width: 20px;
+        height: 256px;
+        padding: 0px;
+        margin: 0px 10px;
+        border: 1px solid rgb(0, 0, 0);
+        position: relative;
+      }
+
+      .color-slider-range {
+        position: absolute;
+        writing-mode: vertical-lr;
+        direction: rtl;
+        appearance: slider-vertical;
+        width: 16px;
+        vertical-align: bottom;
+        top: 0;
+        height: 100%;
+      }
+
+      .color-slider-background {
+        width: 100%;
+        height: 100%;
+      }
+
+      .color-slider-background > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .color-preview {
+        background-color: #fff;
+        width: 60px;
+        height: 60px;
+        border: solid 1px #000;
+        margin-bottom: 8px;
+      }
+
+      .color-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .color-input {
+        width: 40px;
+      }
+
+      .hex-input {
+        width: 60px;
+      }
+
+      .nav-container {
+        width: 100%;
+        top: 0px;
+        position: sticky;
+        background: #fff;
+        background-image: url("img/bg.jpg");
+        color: #fff;
+        z-index: 1000;
+
+        -webkit-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav {
+        width: 1000px;
+        max-width: 100%;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      h2 {
+        font-size: 16px;
+        margin: 0 0 10px 0;
+      }
+
+      h3 {
+        font-size: 14px;
+        margin: 0 0 10px 0;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .nav-title > a {
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .nav-description {
+        color: #fff;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .grid-cols-2 {
+        display: grid;
+        gap: 10px;
+      }
+
+      @media (min-width: 700px) {
+        .grid-cols-2 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .color-square {
+        padding: 10px;
+        height: 70px;
+        aspect-ratio: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body @vue:mounted="mounted" v-cloak>
+    <!-- nav -->
+    <nav class="nav-container">
+      <div class="nav">
+        <p class="nav-title">
+          <a href="https://rgbhexcode.com">RGBHexCode</a>
+        </p>
+        <h1 class="nav-description">HTML/CSS Color Picker & Converter</h1>
+      </div>
+    </nav>
+
+    <div class="content">
+      <!-- color picker -->
+      <div class="container">
+        <div class="color-picker">
+          <!-- color map -->
+          <div class="color-map" @click="moveMapPoint" @mousedown.prevent="startDrag" draggable="false">
+            <!-- drag handle -->
+            <img
+              class="color-map-drag-handle"
+              :src="getImageSrc(true, 'color-picker/images/mappoint.gif')"
+              :style="{ left: `${mapPoint.positionX}px`, top: `${mapPoint.positionY}px` }"
+              draggable="false"
+              alt="drag handle"
+            />
+
             <!-- hue -->
             <div v-if="mode === 'hue'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'hue', 'color-picker/images/blank.gif')" loading="lazy" />
-              <img :src="getImageSrc(mode === 'hue', 'color-picker/images/bar-hue.png')" loading="lazy" />
+              <img
+                :src="getImageSrc(mode === 'hue', 'color-picker/images/blank.gif')"
+                :style="{ backgroundColor: getRGB(colors) }"
+              />
+              <img :src="getImageSrc(mode === 'hue', 'color-picker/images/map-hue.png')" />
             </div>
 
             <!-- saturation -->
             <div v-if="mode === 'saturation'" class="color-map-item">
-              <img src="color-picker/images/blank.gif" :style="{ backgroundColor: slideBarBackground }"
-                alt="slider background" />
-              <img src="color-picker/images/bar-saturation.png" alt="saturation slider background" />
+              <img src="color-picker/images/map-saturation.png" alt="saturation" />
+              <img
+                src="color-picker/images/map-saturation-overlay.png"
+                alt="saturation overlay"
+                :style="{ opacity: 1 - (colors.saturation / 100) }"
+              />
             </div>
 
             <!-- brightness -->
             <div v-if="mode === 'brightness'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'brightness', 'color-picker/images/blank.gif')"
-                :style="{ backgroundColor: slideBarBackground }" />
-              <img :src="getImageSrc(mode === 'brightness', 'color-picker/images/bar-brightness.png')" />
+              <img
+                :src="getImageSrc(mode === 'brightness', 'color-picker/images/blank.gif')"
+                style="background-color: rgb(0, 0, 0)"
+              />
+              <img
+                :src="getImageSrc(mode === 'brightness', 'color-picker/images/map-brightness.png')"
+                :style="{ opacity: colors.brightness / 100 }"
+              />
             </div>
 
             <!-- red -->
             <div v-if="mode === 'red'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-bl.png')"
-                :style="{ opacity: slideBarOpacity.barL1 / 100 }" />
-              <img :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-br.png')"
-                :style="{ opacity: slideBarOpacity.barL2 / 100 }" />
-              <img :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-tr.png')"
-                :style="{ opacity: slideBarOpacity.barL3 / 100 }" />
-              <img :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-tl.png')"
-                :style="{ opacity: slideBarOpacity.barL4 / 100 }" />
+              <img :src="getImageSrc(mode === 'red', 'color-picker/images/map-red-min.png')" />
+              <img
+                :src="getImageSrc(mode === 'red', 'color-picker/images/map-red-max.png')"
+                :style="{ opacity: colors.red / 255 }"
+              />
             </div>
 
             <!-- green -->
             <div v-if="mode === 'green'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-bl.png')"
-                :style="{ opacity: slideBarOpacity.barL1 / 100 }" />
-              <img :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-br.png')"
-                :style="{ opacity: slideBarOpacity.barL2 / 100 }" />
-              <img :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-tr.png')"
-                :style="{ opacity: slideBarOpacity.barL3 / 100 }" />
-              <img :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-tl.png')"
-                :style="{ opacity: slideBarOpacity.barL4 / 100 }" />
+              <img :src="getImageSrc(mode === 'green', 'color-picker/images/map-green-min.png')" />
+              <img
+                :src="getImageSrc(mode === 'green', 'color-picker/images/map-green-max.png')"
+                :style="{ opacity: colors.green / 255 }"
+              />
             </div>
 
             <!-- blue -->
             <div v-if="mode === 'blue'" class="color-map-item">
-              <img :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-bl.png')"
-                :style="{ opacity: slideBarOpacity.barL1 / 100 }" />
-              <img :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-br.png')"
-                :style="{ opacity: slideBarOpacity.barL2 / 100 }" />
-              <img :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-tr.png')"
-                :style="{ opacity: slideBarOpacity.barL3 / 100 }" />
-              <img :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-tl.png')"
-                :style="{ opacity: slideBarOpacity.barL4 / 100 }" />
+              <img :src="getImageSrc(mode === 'blue', 'color-picker/images/map-blue-min.png')" />
+              <img
+                :src="getImageSrc(mode === 'blue', 'color-picker/images/map-blue-max.png')"
+                :style="{ opacity: colors.blue / 255 }"
+              />
             </div>
           </div>
 
-          <!-- color bar slider -->
-          <input class="color-slider-range" type="range" min="0" :max="maxSliderValues[mode]" v-model="colors[mode]"
-            @input="onSliderChange" aria-label="slider" />
-        </div>
-
-        <div>
-          <!-- color preview -->
-          <div class="color-preview" :style="{ backgroundColor: getRGB(colors) }"></div>
-
-          <!-- color inputs -->
-          <div class="color-inputs">
-            <div class="color-inputs">
+          <!-- color bar-->
+          <div class="color-slider">
+            <div class="color-slider-background">
               <!-- hue -->
-              <div>
-                <input type="radio" name="mode" value="hue" v-model="mode" @change="onHsvChange" aria-labelledby="hue">
-                <label for="hue">H:</label>
-                <input class="color-input" type="text" id="hue" v-model="colors.hue" @input="onHsvChange">°
+              <div v-if="mode === 'hue'" class="color-map-item">
+                <img :src="getImageSrc(mode === 'hue', 'color-picker/images/blank.gif')" loading="lazy" />
+                <img :src="getImageSrc(mode === 'hue', 'color-picker/images/bar-hue.png')" loading="lazy" />
               </div>
 
               <!-- saturation -->
-              <div>
-                <input type="radio" name="mode" value="saturation" v-model="mode" @change="onHsvChange"
-                  aria-labelledby="saturation">
-                <label for="saturation">S:</label>
-                <input class="color-input" type="text" id="saturation" v-model="colors.saturation"
-                  @input="onHsvChange">%
+              <div v-if="mode === 'saturation'" class="color-map-item">
+                <img
+                  src="color-picker/images/blank.gif"
+                  :style="{ backgroundColor: slideBarBackground }"
+                  alt="slider background"
+                />
+                <img src="color-picker/images/bar-saturation.png" alt="saturation slider background" />
               </div>
 
               <!-- brightness -->
-              <div>
-                <input type="radio" name="mode" value="brightness" v-model="mode" @change="onHsvChange"
-                  aria-labelledby="brightness">
-                <label for="brightness">B:</label>
-                <input class="color-input" type="text" id="brightness" v-model="colors.brightness"
-                  @input="onHsvChange">%
+              <div v-if="mode === 'brightness'" class="color-map-item">
+                <img
+                  :src="getImageSrc(mode === 'brightness', 'color-picker/images/blank.gif')"
+                  :style="{ backgroundColor: slideBarBackground }"
+                />
+                <img :src="getImageSrc(mode === 'brightness', 'color-picker/images/bar-brightness.png')" />
               </div>
 
               <!-- red -->
-              <div>
-                <input type="radio" name="mode" value="red" v-model="mode" @change="onRgbChange" aria-labelledby="red">
-                <label for="red">R:</label>
-                <input class="color-input" type="text" id="red" v-model="colors.red" @input="onRgbChange">
+              <div v-if="mode === 'red'" class="color-map-item">
+                <img
+                  :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-bl.png')"
+                  :style="{ opacity: slideBarOpacity.barL1 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-br.png')"
+                  :style="{ opacity: slideBarOpacity.barL2 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-tr.png')"
+                  :style="{ opacity: slideBarOpacity.barL3 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'red', 'color-picker/images/bar-red-tl.png')"
+                  :style="{ opacity: slideBarOpacity.barL4 / 100 }"
+                />
               </div>
 
               <!-- green -->
-              <div>
-                <input type="radio" name="mode" value="green" v-model="mode" @change="onRgbChange"
-                  aria-labelledby="green">
-                <label for="green">G:</label>
-                <input class="color-input" type="text" id="green" v-model="colors.green" @input="onRgbChange">
+              <div v-if="mode === 'green'" class="color-map-item">
+                <img
+                  :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-bl.png')"
+                  :style="{ opacity: slideBarOpacity.barL1 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-br.png')"
+                  :style="{ opacity: slideBarOpacity.barL2 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-tr.png')"
+                  :style="{ opacity: slideBarOpacity.barL3 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'green', 'color-picker/images/bar-green-tl.png')"
+                  :style="{ opacity: slideBarOpacity.barL4 / 100 }"
+                />
               </div>
 
               <!-- blue -->
-              <div>
-                <input type="radio" name="mode" value="blue" v-model="mode" @change="onRgbChange"
-                  aria-labelledby="blue">
-                <label for="blue">B:</label>
-                <input class="color-input" type="text" id="blue" v-model="colors.blue" @input="onRgbChange">
+              <div v-if="mode === 'blue'" class="color-map-item">
+                <img
+                  :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-bl.png')"
+                  :style="{ opacity: slideBarOpacity.barL1 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-br.png')"
+                  :style="{ opacity: slideBarOpacity.barL2 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-tr.png')"
+                  :style="{ opacity: slideBarOpacity.barL3 / 100 }"
+                />
+                <img
+                  :src="getImageSrc(mode === 'blue', 'color-picker/images/bar-blue-tl.png')"
+                  :style="{ opacity: slideBarOpacity.barL4 / 100 }"
+                />
+              </div>
+            </div>
+
+            <!-- color bar slider -->
+            <input
+              class="color-slider-range"
+              type="range"
+              min="0"
+              :max="maxSliderValues[mode]"
+              v-model="colors[mode]"
+              @input="onSliderChange"
+              aria-label="slider"
+            />
+          </div>
+
+          <div>
+            <!-- color preview -->
+            <div class="color-preview" :style="{ backgroundColor: getRGB(colors) }"></div>
+
+            <!-- color inputs -->
+            <div class="color-inputs">
+              <div class="color-inputs">
+                <!-- hue -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="hue"
+                    v-model="mode"
+                    @change="onHsvChange"
+                    aria-labelledby="hue"
+                  />
+                  <label for="hue">H:</label>
+                  <input class="color-input" type="text" id="hue" v-model="colors.hue" @input="onHsvChange" />°
+                </div>
+
+                <!-- saturation -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="saturation"
+                    v-model="mode"
+                    @change="onHsvChange"
+                    aria-labelledby="saturation"
+                  />
+                  <label for="saturation">S:</label>
+                  <input
+                    class="color-input"
+                    type="text"
+                    id="saturation"
+                    v-model="colors.saturation"
+                    @input="onHsvChange"
+                  />%
+                </div>
+
+                <!-- brightness -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="brightness"
+                    v-model="mode"
+                    @change="onHsvChange"
+                    aria-labelledby="brightness"
+                  />
+                  <label for="brightness">B:</label>
+                  <input
+                    class="color-input"
+                    type="text"
+                    id="brightness"
+                    v-model="colors.brightness"
+                    @input="onHsvChange"
+                  />%
+                </div>
+
+                <!-- red -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="red"
+                    v-model="mode"
+                    @change="onRgbChange"
+                    aria-labelledby="red"
+                  />
+                  <label for="red">R:</label>
+                  <input class="color-input" type="text" id="red" v-model="colors.red" @input="onRgbChange" />
+                </div>
+
+                <!-- green -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="green"
+                    v-model="mode"
+                    @change="onRgbChange"
+                    aria-labelledby="green"
+                  />
+                  <label for="green">G:</label>
+                  <input class="color-input" type="text" id="green" v-model="colors.green" @input="onRgbChange" />
+                </div>
+
+                <!-- blue -->
+                <div>
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="blue"
+                    v-model="mode"
+                    @change="onRgbChange"
+                    aria-labelledby="blue"
+                  />
+                  <label for="blue">B:</label>
+                  <input class="color-input" type="text" id="blue" v-model="colors.blue" @input="onRgbChange" />
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-      </div>
-      <!-- hex -->
-      <div style="text-align: center; margin-top: 10px;font-size: 30px;">
-        <label for="hex">#:</label>
-        <input class="hex-input" type="text" id="hex" v-model="colors.hex" @input="updateColorsbyHex"
-          style="width: 120px;font-size: 30px;">
-      </div>
-    </div>
-
-    <div class="grid-cols-2" style="margin-top: 10px">
-      <!-- font color on a black background -->
-      <div class="container">
-        <h2>Font color of #{{ colors.hex }} on a black background</h2>
-        <div style="background: black; padding: 20px; display: flex; align-items: center; justify-content: center;">
-          <p :style="{ color: `#${colors.hex}` }">
-            This text has a font color of {{ colors.hex }} on a black background.
-          </p>
+        <!-- hex -->
+        <div style="text-align: center; margin-top: 10px; font-size: 30px">
+          <label for="hex">#:</label>
+          <input
+            class="hex-input"
+            type="text"
+            id="hex"
+            v-model="colors.hex"
+            @input="updateColorsbyHex"
+            style="width: 120px; font-size: 30px"
+          />
         </div>
       </div>
 
-      <!-- font color on a white background -->
-      <div class="container">
-        <h2>Font color of #{{ colors.hex }} on a white background</h2>
-        <div style="background: white; padding: 20px; display: flex; align-items: center; justify-content: center;">
-          <p :style="{ color: `#${colors.hex}` }">
-            This text has a font color of {{ colors.hex }} on a white background.
-          </p>
-        </div>
-      </div>
-
-      <!-- border color -->
-      <div class="container">
-        <h2>Border color of #{{ colors.hex }}</h2>
-        <div style="padding: 20px; display: flex; align-items: center; justify-content: center;"
-          :style="{ border: `2px solid #${colors.hex}` }">
-          <p>
-            This element has a border colour of {{ colors.hex }}.
-          </p>
-        </div>
-      </div>
-
-      <!-- background color -->
-      <div class="container">
-        <h2>Background color of #{{ colors.hex }}</h2>
-        <div style="padding: 20px; display: flex; align-items: center; justify-content: center;"
-          :style="{ background: `#${colors.hex}` }">
-          <p>
-            This element has a background colour of {{ colors.hex }}.
-          </p>
-        </div>
-      </div>
-
-      <!-- complimentary color -->
-      <div class="container">
-        <h3>Complementary Color</h3>
-        <div style="display: flex; flex-wrap: wrap;">
-          <div :style="{background: `#${colors.hex}`}" class="color-square">
-            {{ colors.hex }}
+      <div class="grid-cols-2" style="margin-top: 10px">
+        <!-- font color on a black background -->
+        <div class="container">
+          <h2>Font color of #{{ colors.hex }} on a black background</h2>
+          <div style="background: black; padding: 20px; display: flex; align-items: center; justify-content: center">
+            <p :style="{ color: `#${colors.hex}` }">
+              This text has a font color of {{ colors.hex }} on a black background.
+            </p>
           </div>
-          <div :style="{background: `#${getComplementaryColor(colors.hex)}`}" class="color-square">
-            #{{ getComplementaryColor(colors.hex) }}
-          </div>
-
         </div>
-      </div>
 
-      <!-- split complimentary colors -->
-      <div class="container">
-        <h3>Split Complementary Colors</h3>
-        <div style="display: flex; flex-wrap: wrap;">
+        <!-- font color on a white background -->
+        <div class="container">
+          <h2>Font color of #{{ colors.hex }} on a white background</h2>
+          <div style="background: white; padding: 20px; display: flex; align-items: center; justify-content: center">
+            <p :style="{ color: `#${colors.hex}` }">
+              This text has a font color of {{ colors.hex }} on a white background.
+            </p>
+          </div>
+        </div>
+
+        <!-- border color -->
+        <div class="container">
+          <h2>Border color of #{{ colors.hex }}</h2>
           <div
-            v-for="(item, index) in getSplitComplementaryFromHsv(colors.hue, colors.saturation, colors.brightness, 30)"
-            :key="index" :style="{ background: `#${item}` }" class="color-square">
-            #{{ item }}
+            style="padding: 20px; display: flex; align-items: center; justify-content: center"
+            :style="{ border: `2px solid #${colors.hex}` }"
+          >
+            <p>This element has a border colour of {{ colors.hex }}.</p>
           </div>
         </div>
-      </div>
 
-      <!-- analogous colors -->
-      <div class="container">
-        <h3>Analogous Colors</h3>
-        <div style="display: flex; flex-wrap: wrap;">
+        <!-- background color -->
+        <div class="container">
+          <h2>Background color of #{{ colors.hex }}</h2>
           <div
-            v-for="(item, index) in getSplitComplementaryFromHsv(colors.hue, colors.saturation, colors.brightness, 30)"
-            :key="index" :style="{ background: `#${item}` }" class="color-square">
+            style="padding: 20px; display: flex; align-items: center; justify-content: center"
+            :style="{ background: `#${colors.hex}` }"
+          >
+            <p>This element has a background colour of {{ colors.hex }}.</p>
+          </div>
+        </div>
+
+        <!-- complimentary color -->
+        <div class="container">
+          <h3>Complementary Color</h3>
+          <div style="display: flex; flex-wrap: wrap">
+            <div :style="{background: `#${colors.hex}`}" class="color-square">{{ colors.hex }}</div>
+            <div :style="{background: `#${getComplementaryColor(colors.hex)}`}" class="color-square">
+              #{{ getComplementaryColor(colors.hex) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- split complimentary colors -->
+        <div class="container">
+          <h3>Split Complementary Colors</h3>
+          <div style="display: flex; flex-wrap: wrap">
+            <div
+              v-for="(item, index) in getSplitComplementaryFromHsv(colors.hue, colors.saturation, colors.brightness, 30)"
+              :key="index"
+              :style="{ background: `#${item}` }"
+              class="color-square"
+            >
+              #{{ item }}
+            </div>
+          </div>
+        </div>
+
+        <!-- analogous colors -->
+        <div class="container">
+          <h3>Analogous Colors</h3>
+          <div style="display: flex; flex-wrap: wrap">
+            <div
+              v-for="(item, index) in getSplitComplementaryFromHsv(colors.hue, colors.saturation, colors.brightness, 30)"
+              :key="index"
+              :style="{ background: `#${item}` }"
+              class="color-square"
+            >
+              #{{ item }}
+            </div>
+          </div>
+        </div>
+
+        <!-- triadic colors -->
+        <div class="container">
+          <h3>Triadic Colors</h3>
+          <div style="display: flex; flex-wrap: wrap">
+            <div
+              v-for="(item, index) in getTriadicColors(colors.hue, colors.saturation, colors.brightness)"
+              :key="index"
+              :style="{background: `#${item}` }"
+              class="color-square"
+            >
+              #{{ item }}
+            </div>
+          </div>
+        </div>
+
+        <!-- tetradic colors -->
+        <div class="container">
+          <h3>Tetradic Colors</h3>
+          <div style="display: flex; flex-wrap: wrap">
+            <div
+              v-for="(item, index) in getTetradicColors(colors.hue, colors.saturation, colors.brightness)"
+              :key="index"
+              :style="{background: `#${item}` }"
+              class="color-square"
+            >
+              #{{ item }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- tones -->
+      <div class="container" style="margin-top: 10px">
+        <h3>Tones</h3>
+        <div style="display: flex; flex-wrap: wrap">
+          <div
+            v-for="(item, index) in getTonesFromHsv(colors.hue, colors.saturation, colors.brightness)"
+            :key="index"
+            :style="{background: `#${item}` }"
+            class="color-square"
+          >
             #{{ item }}
           </div>
         </div>
       </div>
 
-      <!-- triadic colors -->
-      <div class="container">
-        <h3>Triadic Colors</h3>
-        <div style="display: flex; flex-wrap: wrap;">
-          <div v-for="(item, index) in getTriadicColors(colors.hue, colors.saturation, colors.brightness)" :key="index"
-            :style="{background: `#${item}` }" class="color-square">
-            #{{ item }}
-          </div>
-        </div>
-      </div>
-
-      <!-- tetradic colors -->
-      <div class="container">
-        <h3>Tetradic Colors</h3>
-        <div style="display: flex; flex-wrap: wrap;">
-          <div v-for="(item, index) in getTetradicColors(colors.hue, colors.saturation, colors.brightness)" :key="index"
-            :style="{background: `#${item}` }" class="color-square">
+      <!-- tones -->
+      <div class="container" style="margin-top: 10px">
+        <h3>Shades</h3>
+        <div style="display: flex; flex-wrap: wrap">
+          <div
+            v-for="(item, index) in getShadesFromHsv(colors.hue, colors.saturation, colors.brightness)"
+            :key="index"
+            :style="{background: `#${item}`}"
+            class="color-square"
+          >
             #{{ item }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- tones -->
-    <div class="container" style="margin-top: 10px;">
-      <h3>Tones</h3>
-      <div style="display: flex; flex-wrap: wrap;">
-        <div v-for="(item, index) in getTonesFromHsv(colors.hue, colors.saturation, colors.brightness)" :key="index"
-          :style="{background: `#${item}` }" class="color-square">
-          #{{ item }}
-        </div>
-      </div>
+    <div style="text-align: center; margin-top: 20px">
+      <p>Built by <a href="https://timb.com?ref=rgbhexcode">timb.com</a></p>
     </div>
 
-    <!-- tones -->
-    <div class="container" style="margin-top: 10px;">
-      <h3>Shades</h3>
-      <div style="display: flex; flex-wrap: wrap;">
-        <div v-for="(item, index) in getShadesFromHsv(colors.hue, colors.saturation, colors.brightness)" :key="index"
-          :style="{background: `#${item}`}" class="color-square">
-          #{{ item }}
-        </div>
-      </div>
+    <div style="text-align: center; margin-top: 20px">
+      <p>
+        Also try
+        <!-- eslint-disable-next-line -->
+        <a href="https://colormagic.app">color palette generator</a>,
+        <!-- eslint-disable-next-line -->
+        <a href="https://colordrop.io">daily color palettes</a>,
+        <!-- eslint-disable-next-line -->
+        <a href="https://randomcolor.com">random color</a>,
+        <!-- eslint-disable-next-line -->
+        <a href="https://colorwheel.co">color wheel</a>, and
+        <!-- eslint-disable-next-line -->
+        <a href="https://convertacolor.com">color converter</a>.
+      </p>
     </div>
-  </div>
 
-  <div style="text-align: center; margin-top: 20px;">
-    <p>
-      Built by <a href="https://timb.com?ref=rgbhexcode">timb.com</a>
-    </p>
-  </div>
+    <script type="module">
+      import { createApp } from "https://unpkg.com/petite-vue?module";
 
-  <script type="module">
-    import { createApp } from 'https://unpkg.com/petite-vue?module';
+      const mode = "saturation";
 
-    const mode = 'saturation';
+      const colors = {
+        hue: 48,
+        saturation: 100,
+        brightness: 100,
+        red: 255,
+        green: 204,
+        blue: 0,
+        hex: "ffcc00",
+      };
 
-    const colors = {
-      hue: 48,
-      saturation: 100,
-      brightness: 100,
-      red: 255,
-      green: 204,
-      blue: 0,
-      hex: 'ffcc00'
-    }
+      const maxSliderValues = {
+        saturation: 100,
+        brightness: 100,
+        hue: 360,
+        red: 255,
+        green: 255,
+        blue: 255,
+      };
 
-    const maxSliderValues = {
-      saturation: 100,
-      brightness: 100,
-      hue: 360,
-      red: 255,
-      green: 255,
-      blue: 255,
-    };
+      const slideBarOpacity = {
+        barL1: 0,
+        barL2: 0,
+        barL3: 0,
+        barL4: 0,
+      };
 
-    const slideBarOpacity = {
-      barL1: 0,
-      barL2: 0,
-      barL3: 0,
-      barL4: 0,
-    }
+      const slideBarBackground = getRGB(colors);
 
-    const slideBarBackground = getRGB(colors);
+      const mapPoint = {
+        isDragging: false,
+        positionX: 0,
+        positionY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        xMin: 0,
+        xMax: 0,
+        yMin: 0,
+        yMax: 0,
+      };
 
-    const mapPoint = {
-      isDragging: false,
-      positionX: 0,
-      positionY: 0,
-      offsetX: 0,
-      offsetY: 0,
-      xMin: 0,
-      xMax: 0,
-      yMin: 0,
-      yMax: 0,
-    }
-
-    function getImageSrc(isTrue, src) {
-      return isTrue ? src : ''
-    }
-
-    function onHsvChange() {
-      this.updateRbgByHsv();
-      this.updateHex();
-      this.updateSliderBackground();
-      this.updateOpacityByRgb();
-      this.moveMapPointFromColorChange();
-    }
-
-    function onRgbChange() {
-      this.updateHsvByRgb();
-      this.updateHex();
-      this.updateSliderBackground();
-      this.updateOpacityByRgb();
-      this.moveMapPointFromColorChange();
-    }
-
-    function onSliderChange(event) {
-      if (['saturation', 'brightness', 'hue'].includes(this.mode)) {
-        this.onHsvChange();
-      } else {
-        this.onRgbChange()
-      }
-    }
-
-    function updateSliderBackground() {
-      switch (this.mode) {
-        case 'hue':
-          break;
-        case 'saturation':
-          this.slideBarBackground = getRGBFromHsv({ ...this.colors, saturation: 100 })
-          break;
-        case 'brightness':
-          this.slideBarBackground = getRGBFromHsv({ ...this.colors, brightness: 100 })
-          break;
-        default:
-          this.slideBarBackground = getRGBFromHsv({ ...this.colors });
-          break;
-      }
-    }
-
-    function updateHex() {
-      this.colors.hex = rgbToHex({
-        r: this.colors.red,
-        g: this.colors.green,
-        b: this.colors.blue
-      })
-    }
-
-    function updateColorsbyHex() {
-      const rgb = hexToRgb(this.colors.hex);
-      const hsv = rgbToHsv(rgb);
-
-      this.colors.hue = hsv.h;
-      this.colors.saturation = hsv.s;
-      this.colors.brightness = hsv.v;
-      this.colors.red = rgb.r;
-      this.colors.blue = rgb.b;
-      this.colors.green = rgb.g;
-
-      this.updateSliderBackground();
-      this.moveMapPointFromColorChange();
-    }
-
-    function updateRbgByHsv() {
-      const { r, g, b } = hsvToRgb({
-        h: this.colors.hue,
-        s: this.colors.saturation,
-        v: this.colors.brightness
-      })
-
-      this.colors.red = r;
-      this.colors.green = g;
-      this.colors.blue = b;
-    }
-
-    function updateHsvByRgb() {
-      const { h, s, v } = rgbToHsv({
-        r: this.colors.red,
-        g: this.colors.green,
-        b: this.colors.blue
-      })
-
-      this.colors.hue = h;
-      this.colors.saturation = s;
-      this.colors.brightness = v;
-    }
-
-    function updateOpacityByRgb() {
-      if (['saturation', 'brightness', 'hue'].includes(this.mode)) {
-        return;
+      function getImageSrc(isTrue, src) {
+        return isTrue ? src : "";
       }
 
-      const rgbOpacities = calculateRGBOpaqueness(
-        this.colors.red,
-        this.colors.green,
-        this.colors.blue,
-        this.mode
-      );
-
-      this.slideBarOpacity = rgbOpacities;
-    }
-
-    function moveMapPoint(event) {
-      const container = document.querySelector('.color-map').getBoundingClientRect();
-      const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
-
-      const x = event.clientX - container.left - dragHandle.width / 2;
-      const y = event.clientY - container.top - dragHandle.height / 2;
-      const xMin = 0 - dragHandle.width / 2;
-      const xMax = container.width - dragHandle.width / 2;
-      const yMin = 0 - dragHandle.height / 2;
-      const yMax = container.height - dragHandle.height / 2;
-      const positionX = Math.min(Math.max(x, xMin), xMax);
-      const positionY = Math.min(Math.max(y, yMin), yMax);
-
-      this.mapPoint.positionX = positionX;
-      this.mapPoint.positionY = positionY;
-
-      const xPercent = (positionX / container.width) * 100;
-      const yPercent = (positionY / container.height) * 100;
-
-      this.setColorsFromMap(xPercent, yPercent);
-      this.updateHex();
-    }
-
-    function moveMapPointFromColorChange() {
-      const container = document.querySelector('.color-map').getBoundingClientRect();
-      const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
-
-      const { hue, saturation, brightness, red, green, blue } = this.colors;
-      const mode = this.mode;
-
-      let xPercent = 0;
-      let yPercent = 0;
-
-      switch (mode) {
-        case "hue":
-          xPercent = saturation;
-          yPercent = 100 - brightness;
-          break;
-        case "saturation":
-          xPercent = hue / 360 * 100;
-          yPercent = 100 - brightness;
-          break;
-        case "brightness":
-          xPercent = hue / 360 * 100;
-          yPercent = 100 - saturation;
-          break;
-        case "red":
-          xPercent = (blue / 255) * 100;
-          yPercent = 100 - (green / 255) * 100;
-          break;
-        case "green":
-          xPercent = (blue / 255) * 100;
-          yPercent = 100 - (red / 255) * 100;
-          break;
-        case "blue":
-          xPercent = (red / 255) * 100;
-          yPercent = 100 - (green / 255) * 100;
-          break;
-        default:
-          console.error("Unsupported mode:", mode);
-          return;
-      }
-
-      const positionX = ((xPercent / 100) * container.width) - (dragHandle.width / 2);
-      const positionY = ((yPercent / 100) * container.height) - (dragHandle.height / 2);
-
-      const xMin = 0 - dragHandle.width / 2;
-      const xMax = container.width - dragHandle.width / 2;
-      const yMin = 0 - dragHandle.height / 2;
-      const yMax = container.height - dragHandle.height / 2;
-
-      const constrainedX = Math.min(Math.max(positionX, xMin), xMax);
-      const constrainedY = Math.min(Math.max(positionY, yMin), yMax);
-
-      this.mapPoint.positionX = constrainedX;
-      this.mapPoint.positionY = constrainedY;
-    }
-
-    function setColorsFromMap(xPercent, yPercent) {
-      const mode = this.mode;
-      let h, s, v, r, g, b;
-
-      let rgb = {};
-      let hsv = {};
-
-      switch (mode) {
-        case "hue":
-          h = this.colors.hue;
-          s = xPercent;
-          v = 100 - yPercent;
-          rgb = hsvToRgb({ h, s, v })
-          r = rgb.r;
-          g = rgb.g;
-          b = rgb.b;
-          break;
-        case "saturation":
-          s = this.colors.saturation;
-          h = xPercent * 3.6;
-          v = 100 - yPercent;
-          rgb = hsvToRgb({ h, s, v })
-          r = rgb.r;
-          g = rgb.g;
-          b = rgb.b;
-          break;
-        case "brightness":
-          v = this.colors.brightness;
-          h = xPercent * 3.6;
-          s = 100 - yPercent;
-          rgb = hsvToRgb({ h, s, v })
-          r = rgb.r;
-          g = rgb.g;
-          b = rgb.b;
-          break;
-        case "red":
-          r = this.colors.red;
-          g = 255 - (yPercent / 100) * 255;
-          b = (xPercent / 100) * 255;
-          hsv = rgbToHsv({ r, b, g })
-          h = hsv.h;
-          s = hsv.s;
-          v = hsv.v;
-          break;
-        case "green":
-          g = this.colors.green;
-          r = (xPercent / 100) * 255;
-          b = 255 - (yPercent / 100) * 255;
-          hsv = rgbToHsv({ r, b, g })
-          h = hsv.h;
-          s = hsv.s;
-          v = hsv.v;
-          break;
-        case "blue":
-          b = this.colors.blue;
-          r = (xPercent / 100) * 255;
-          g = 255 - (yPercent / 100) * 255;
-          hsv = rgbToHsv({ r, b, g })
-          h = hsv.h;
-          s = hsv.s;
-          v = hsv.v;
-          break;
-        default:
-          console.error("Unsupported mode:", mode);
-          return;
-      }
-
-      this.colors.hue = h
-      this.colors.saturation = s;
-      this.colors.brightness = v;
-      this.colors.red = r;
-      this.colors.green = g;
-      this.colors.blue = b;
-
-      this.updateSliderBackground();
-      this.updateOpacityByRgb();
-    }
-
-    function startDrag(event) {
-      this.mapPoint.isDragging = true;
-
-      const container = document.querySelector('.color-map').getBoundingClientRect();
-      const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
-
-      this.mapPoint.xMin = 0 - (dragHandle.width / 2);
-      this.mapPoint.xMax = container.width - (dragHandle.width / 2);
-      this.mapPoint.yMin = 0 - (dragHandle.height / 2);
-      this.mapPoint.yMax = container.height - (dragHandle.height / 2);
-      this.mapPoint._moveMapPoint = moveMapPoint.bind(this);
-      this.mapPoint._stopDrag = stopDrag.bind(this);
-
-      document.addEventListener("mousemove", this.mapPoint._moveMapPoint);
-      document.addEventListener("mouseup", this.mapPoint._stopDrag);
-    };
-
-    function stopDrag() {
-      this.mapPoint.isDragging = false;
-
-      document.removeEventListener("mousemove", this.mapPoint._moveMapPoint);
-      document.removeEventListener("mouseup", this.mapPoint._stopDrag);
-    };
-
-    createApp({
-      colors,
-      mode,
-      mapPoint,
-      maxSliderValues,
-      updateRbgByHsv,
-      updateHsvByRgb,
-      updateHex,
-      onRgbChange,
-      onHsvChange,
-      getImageSrc,
-      startDrag,
-      stopDrag,
-      moveMapPoint,
-      slideBarOpacity,
-      slideBarBackground,
-      updateOpacityByRgb,
-      updateColorsbyHex,
-      moveMapPointFromColorChange,
-      updateSliderBackground,
-      setColorsFromMap,
-      onSliderChange,
-      mounted() {
+      function onHsvChange() {
+        this.updateRbgByHsv();
+        this.updateHex();
+        this.updateSliderBackground();
+        this.updateOpacityByRgb();
         this.moveMapPointFromColorChange();
-      },
-    }).mount();
-  </script>
-</body>
+      }
 
+      function onRgbChange() {
+        this.updateHsvByRgb();
+        this.updateHex();
+        this.updateSliderBackground();
+        this.updateOpacityByRgb();
+        this.moveMapPointFromColorChange();
+      }
+
+      function onSliderChange(event) {
+        if (["saturation", "brightness", "hue"].includes(this.mode)) {
+          this.onHsvChange();
+        } else {
+          this.onRgbChange();
+        }
+      }
+
+      function updateSliderBackground() {
+        switch (this.mode) {
+          case "hue":
+            break;
+          case "saturation":
+            this.slideBarBackground = getRGBFromHsv({ ...this.colors, saturation: 100 });
+            break;
+          case "brightness":
+            this.slideBarBackground = getRGBFromHsv({ ...this.colors, brightness: 100 });
+            break;
+          default:
+            this.slideBarBackground = getRGBFromHsv({ ...this.colors });
+            break;
+        }
+      }
+
+      function updateHex() {
+        this.colors.hex = rgbToHex({
+          r: this.colors.red,
+          g: this.colors.green,
+          b: this.colors.blue,
+        });
+      }
+
+      function updateColorsbyHex() {
+        const rgb = hexToRgb(this.colors.hex);
+        const hsv = rgbToHsv(rgb);
+
+        this.colors.hue = hsv.h;
+        this.colors.saturation = hsv.s;
+        this.colors.brightness = hsv.v;
+        this.colors.red = rgb.r;
+        this.colors.blue = rgb.b;
+        this.colors.green = rgb.g;
+
+        this.updateSliderBackground();
+        this.moveMapPointFromColorChange();
+      }
+
+      function updateRbgByHsv() {
+        const { r, g, b } = hsvToRgb({
+          h: this.colors.hue,
+          s: this.colors.saturation,
+          v: this.colors.brightness,
+        });
+
+        this.colors.red = r;
+        this.colors.green = g;
+        this.colors.blue = b;
+      }
+
+      function updateHsvByRgb() {
+        const { h, s, v } = rgbToHsv({
+          r: this.colors.red,
+          g: this.colors.green,
+          b: this.colors.blue,
+        });
+
+        this.colors.hue = h;
+        this.colors.saturation = s;
+        this.colors.brightness = v;
+      }
+
+      function updateOpacityByRgb() {
+        if (["saturation", "brightness", "hue"].includes(this.mode)) {
+          return;
+        }
+
+        const rgbOpacities = calculateRGBOpaqueness(this.colors.red, this.colors.green, this.colors.blue, this.mode);
+
+        this.slideBarOpacity = rgbOpacities;
+      }
+
+      function moveMapPoint(event) {
+        const container = document.querySelector(".color-map").getBoundingClientRect();
+        const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
+
+        const x = event.clientX - container.left - dragHandle.width / 2;
+        const y = event.clientY - container.top - dragHandle.height / 2;
+        const xMin = 0 - dragHandle.width / 2;
+        const xMax = container.width - dragHandle.width / 2;
+        const yMin = 0 - dragHandle.height / 2;
+        const yMax = container.height - dragHandle.height / 2;
+        const positionX = Math.min(Math.max(x, xMin), xMax);
+        const positionY = Math.min(Math.max(y, yMin), yMax);
+
+        this.mapPoint.positionX = positionX;
+        this.mapPoint.positionY = positionY;
+
+        const xPercent = (positionX / container.width) * 100;
+        const yPercent = (positionY / container.height) * 100;
+
+        this.setColorsFromMap(xPercent, yPercent);
+        this.updateHex();
+      }
+
+      function moveMapPointFromColorChange() {
+        const container = document.querySelector(".color-map").getBoundingClientRect();
+        const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
+
+        const { hue, saturation, brightness, red, green, blue } = this.colors;
+        const mode = this.mode;
+
+        let xPercent = 0;
+        let yPercent = 0;
+
+        switch (mode) {
+          case "hue":
+            xPercent = saturation;
+            yPercent = 100 - brightness;
+            break;
+          case "saturation":
+            xPercent = (hue / 360) * 100;
+            yPercent = 100 - brightness;
+            break;
+          case "brightness":
+            xPercent = (hue / 360) * 100;
+            yPercent = 100 - saturation;
+            break;
+          case "red":
+            xPercent = (blue / 255) * 100;
+            yPercent = 100 - (green / 255) * 100;
+            break;
+          case "green":
+            xPercent = (blue / 255) * 100;
+            yPercent = 100 - (red / 255) * 100;
+            break;
+          case "blue":
+            xPercent = (red / 255) * 100;
+            yPercent = 100 - (green / 255) * 100;
+            break;
+          default:
+            console.error("Unsupported mode:", mode);
+            return;
+        }
+
+        const positionX = (xPercent / 100) * container.width - dragHandle.width / 2;
+        const positionY = (yPercent / 100) * container.height - dragHandle.height / 2;
+
+        const xMin = 0 - dragHandle.width / 2;
+        const xMax = container.width - dragHandle.width / 2;
+        const yMin = 0 - dragHandle.height / 2;
+        const yMax = container.height - dragHandle.height / 2;
+
+        const constrainedX = Math.min(Math.max(positionX, xMin), xMax);
+        const constrainedY = Math.min(Math.max(positionY, yMin), yMax);
+
+        this.mapPoint.positionX = constrainedX;
+        this.mapPoint.positionY = constrainedY;
+      }
+
+      function setColorsFromMap(xPercent, yPercent) {
+        const mode = this.mode;
+        let h, s, v, r, g, b;
+
+        let rgb = {};
+        let hsv = {};
+
+        switch (mode) {
+          case "hue":
+            h = this.colors.hue;
+            s = xPercent;
+            v = 100 - yPercent;
+            rgb = hsvToRgb({ h, s, v });
+            r = rgb.r;
+            g = rgb.g;
+            b = rgb.b;
+            break;
+          case "saturation":
+            s = this.colors.saturation;
+            h = xPercent * 3.6;
+            v = 100 - yPercent;
+            rgb = hsvToRgb({ h, s, v });
+            r = rgb.r;
+            g = rgb.g;
+            b = rgb.b;
+            break;
+          case "brightness":
+            v = this.colors.brightness;
+            h = xPercent * 3.6;
+            s = 100 - yPercent;
+            rgb = hsvToRgb({ h, s, v });
+            r = rgb.r;
+            g = rgb.g;
+            b = rgb.b;
+            break;
+          case "red":
+            r = this.colors.red;
+            g = 255 - (yPercent / 100) * 255;
+            b = (xPercent / 100) * 255;
+            hsv = rgbToHsv({ r, b, g });
+            h = hsv.h;
+            s = hsv.s;
+            v = hsv.v;
+            break;
+          case "green":
+            g = this.colors.green;
+            r = (xPercent / 100) * 255;
+            b = 255 - (yPercent / 100) * 255;
+            hsv = rgbToHsv({ r, b, g });
+            h = hsv.h;
+            s = hsv.s;
+            v = hsv.v;
+            break;
+          case "blue":
+            b = this.colors.blue;
+            r = (xPercent / 100) * 255;
+            g = 255 - (yPercent / 100) * 255;
+            hsv = rgbToHsv({ r, b, g });
+            h = hsv.h;
+            s = hsv.s;
+            v = hsv.v;
+            break;
+          default:
+            console.error("Unsupported mode:", mode);
+            return;
+        }
+
+        this.colors.hue = h;
+        this.colors.saturation = s;
+        this.colors.brightness = v;
+        this.colors.red = r;
+        this.colors.green = g;
+        this.colors.blue = b;
+
+        this.updateSliderBackground();
+        this.updateOpacityByRgb();
+      }
+
+      function startDrag(event) {
+        this.mapPoint.isDragging = true;
+
+        const container = document.querySelector(".color-map").getBoundingClientRect();
+        const dragHandle = document.querySelector(".color-map-drag-handle").getBoundingClientRect();
+
+        this.mapPoint.xMin = 0 - dragHandle.width / 2;
+        this.mapPoint.xMax = container.width - dragHandle.width / 2;
+        this.mapPoint.yMin = 0 - dragHandle.height / 2;
+        this.mapPoint.yMax = container.height - dragHandle.height / 2;
+        this.mapPoint._moveMapPoint = moveMapPoint.bind(this);
+        this.mapPoint._stopDrag = stopDrag.bind(this);
+
+        document.addEventListener("mousemove", this.mapPoint._moveMapPoint);
+        document.addEventListener("mouseup", this.mapPoint._stopDrag);
+      }
+
+      function stopDrag() {
+        this.mapPoint.isDragging = false;
+
+        document.removeEventListener("mousemove", this.mapPoint._moveMapPoint);
+        document.removeEventListener("mouseup", this.mapPoint._stopDrag);
+      }
+
+      createApp({
+        colors,
+        mode,
+        mapPoint,
+        maxSliderValues,
+        updateRbgByHsv,
+        updateHsvByRgb,
+        updateHex,
+        onRgbChange,
+        onHsvChange,
+        getImageSrc,
+        startDrag,
+        stopDrag,
+        moveMapPoint,
+        slideBarOpacity,
+        slideBarBackground,
+        updateOpacityByRgb,
+        updateColorsbyHex,
+        moveMapPointFromColorChange,
+        updateSliderBackground,
+        setColorsFromMap,
+        onSliderChange,
+        mounted() {
+          this.moveMapPointFromColorChange();
+        },
+      }).mount();
+    </script>
+  </body>
 </html>
